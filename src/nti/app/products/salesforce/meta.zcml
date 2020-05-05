@@ -1,0 +1,10 @@
+<configure	xmlns="http://namespaces.zope.org/zope"
+			xmlns:meta="http://namespaces.zope.org/meta">
+
+	<meta:directives namespace="http://nextthought.com/ntp/salesforce">
+		<meta:directive	name="registerSalesforceLogonSettings"
+						schema=".zcml.IRegisterSalesforceLogonSettings"
+						handler=".zcml.registerSalesforceLogonSettings" />
+	</meta:directives>
+
+</configure>
