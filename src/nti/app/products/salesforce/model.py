@@ -21,11 +21,11 @@ from nti.schema.schema import SchemaConfigured
 logger = __import__('logging').getLogger(__name__)
 
 
-@EqHash('api_endpoint', 'api_key')
+@EqHash('client_id')
 @interface.implementer(ISalesforceLogonSettings)
 class SalesforceLogonSettings(SchemaConfigured):
     createDirectFieldProperties(ISalesforceLogonSettings)
 
     def __str__(self):
         # pylint: disable=no-member
-        return self.api_endpoint
+        return self.client_id

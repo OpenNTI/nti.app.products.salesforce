@@ -68,7 +68,7 @@ REL_LOGIN_SALESFORCE = 'logon.salesforce'
 #: The redirect rel after SALESFORCE auth
 LOGON_SALESFORCE = 'logon.salesforce.oauth2'
 
-SALSEFORCE_RETURN_URL_PARAM = 'redirect_url'
+SALESFORCE_RETURN_URL_PARAM = 'redirect_uri'
 
 # Saw timeouts at 1 second
 _REQUEST_TIMEOUT = 4.0
@@ -89,7 +89,7 @@ def redirect_salesforce2_params(request, state=None):
     params = {'state': state,
               'response_type': 'code',
               'client_id': auth_settings.client_id,
-               SALSEFORCE_RETURN_URL_PARAM: redirect_salesforce_uri(request)}
+               SALESFORCE_RETURN_URL_PARAM: redirect_salesforce_uri(request)}
     return params
 
 
@@ -175,6 +175,7 @@ def salesforce_oauth2(request):
     data = {'grant_type': 'authorization_code',
             'client_id': auth_settings.client_id,
             'client_secret': auth_settings.client_secret,
+             SALESFORCE_RETURN_URL_PARAM: redirect_salesforce_uri(request),
             'code': code}
     auth = requests.post(auth_settings.token_url,
                          data=data,

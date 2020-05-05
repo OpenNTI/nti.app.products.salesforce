@@ -22,7 +22,7 @@ ZCML_STRING = """
 <configure  xmlns="http://namespaces.zope.org/zope"
             xmlns:i18n="http://namespaces.zope.org/i18n"
             xmlns:zcml="http://namespaces.zope.org/zcml"
-            xmlns:your="http://nextthought.com/ntp/salesforce">
+            xmlns:salesforce="http://nextthought.com/ntp/salesforce">
 
     <include package="zope.component" file="meta.zcml" />
     <include package="zope.security" file="meta.zcml" />
@@ -30,12 +30,12 @@ ZCML_STRING = """
     <include package="." file="meta.zcml" />
 
     <configure>
-        <your:registerSalesforceLogonSettings client_id="abcde"
-                                              client_secret="1111111111111"
-                                              login_url="https://login.salesforce.com/services/oauth2/authorize"
-                                              token_url="https://login.salesforce.com/services/oauth2/token"
-                                              user_info_url="https://login.salesforce.com/services/oauth2/userinfo"
-                                              app_title="salesforce app" />
+        <salesforce:registerSalesforceLogonSettings client_id="abcde"
+                                                    client_secret="1111111111111"
+                                                    login_url="https://login.salesforce.com/services/oauth2/authorize"
+                                                    token_url="https://login.salesforce.com/services/oauth2/token"
+                                                    user_info_url="https://login.salesforce.com/services/oauth2/userinfo"
+                                                    app_title="salesforce app" />
     </configure>
 </configure>
 """
