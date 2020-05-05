@@ -24,21 +24,42 @@ from nti.app.products.salesforce.model import SalesforceLogonSettings
 
 from nti.common._compat import text_
 
+from nti.common.cypher import get_plaintext
+
+from nti.schema.field import HTTPURL
+
 logger = __import__('logging').getLogger(__name__)
 
 
 class IRegisterSalesforceLogonSettings(interface.Interface):
 
-    api_endpoint = TextLine(title=u"The salesforce API url", required=True)
+    client_id = TextLine(title=u'The OAuth2 client id',
+                         required=True)
 
-    api_key = TextLine(title=u"The salesforce api key", required=True)
+    client_secret = TextLine(title=u'The OAuth2 client secret',
+                             required=True)
 
     app_title = TextLine(title=u"The salesforce app display title", required=False)
 
+    login_url = HTTPURL(title=u'The url the client should be sent to in order to initiate the log in process',
+                        required=True)
 
-def registerSalesforceLogonSettings(_context, api_endpoint, api_key, app_title):
+    token_url = HTTPURL(title=u'The token url',
+                        required=True)
+
+    user_info_url = HTTPURL(title=u'The url to fetch user information',
+                        required=True)
+
+
+def registerSalesforceLogonSettings(_context, client_id, client_secret, app_title,
+                                    login_url,
+                                    user_info_url,
+                                    token_url):
     factory = functools.partial(SalesforceLogonSettings,
-                                api_endpoint=text_(api_endpoint),
+                                client_id=text_(client_id),
                                 app_title=text_(app_title),
-                                api_key=text_(api_key))
+                                client_secret=get_plaintext(client_secret),
+                                login_url=login_url,
+                                user_info_url=user_info_url,
+                                token_url=token_url)
     utility(_context, provides=ISalesforceLogonSettings, factory=factory)

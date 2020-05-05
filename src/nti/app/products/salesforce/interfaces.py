@@ -17,6 +17,7 @@ from zope.interface import Attribute
 from zope.interface.interfaces import ObjectEvent
 from zope.interface.interfaces import IObjectEvent
 
+from nti.schema.field import HTTPURL
 from nti.schema.field import ValidTextLine as TextLine
 
 
@@ -28,11 +29,22 @@ class ISalesforceUser(interface.Interface):
 
 class ISalesforceLogonSettings(interface.Interface):
 
-    api_endpoint = TextLine(title=u"The Salesforce API url", required=True)
+    client_id = TextLine(title=u'The OAuth2 client id',
+                         required=True)
 
-    api_key = TextLine(title=u"The Salesforce api key", required=True)
+    client_secret = TextLine(title=u'The OAuth2 client secret',
+                             required=True)
 
     app_title = TextLine(title=u"The salesforce app display title", required=False)
+
+    login_url = HTTPURL(title=u'The url the client should be sent to in order to initiate the log in process',
+                        required=True)
+
+    token_url = HTTPURL(title=u'The token url',
+                        required=True)
+
+    user_info_url = HTTPURL(title=u'The url to fetch user information',
+                        required=True)
 
 
 class ISalesforceUserCreatedEvent(IObjectEvent):

@@ -175,7 +175,6 @@ def salesforce_oauth2(request):
     data = {'grant_type': 'authorization_code',
             'client_id': auth_settings.client_id,
             'client_secret': auth_settings.client_secret,
-            'scope': 'user-info',
             'code': code}
     auth = requests.post(auth_settings.token_url,
                          data=data,
@@ -197,9 +196,9 @@ def salesforce_oauth2(request):
     access_token = data['access_token']
     try:
         logger.debug("Getting user profile")
-        response = requests.post(auth_settings.user_info_url,
-                                 data={"access_token": access_token,
-                                       'client_id': auth_settings.client_id})
+        response = requests.get(auth_settings.user_info_url,
+                                params={"access_token": access_token,
+                                        "format": "json"})
 
         try:
             response.raise_for_status()
@@ -221,16 +220,14 @@ def salesforce_oauth2(request):
                                                 'salesforce.failure'),
                                             error=_(u'Invalid user info.'))
         if     not user_info.get('email') \
-            or not user_info.get('full_name') \
-            or not user_info.get('user_id') \
-            or not user_info.get('user_type'):
+            or not user_info.get('name') \
+            or not user_info.get('user_id'):
                 logger.exception("Invalid salesforce user info (%s)", user_info)
                 return _create_failure_response(request,
                                                 request.cookies.get('salesforce.failure'),
                                                 error=_(u'Invalid user info.'))
         external_id = str(user_info.get('user_id'))
-        external_type = str(user_info.get('user_type', 'user_id'))
-        user = get_user_for_salesforce_id(external_type, external_id)
+        user = get_user_for_salesforce_id(external_id)
         if user is None:
             username = generate_username()
             interface.alsoProvides(request, INoAccountCreationEmail)
@@ -238,13 +235,13 @@ def salesforce_oauth2(request):
                                                fname=None,
                                                lname=None,
                                                username=username,
-                                               realname=user_info.get('full_name'),
+                                               realname=user_info.get('name'),
                                                email=user_info.get('email'),
                                                idurl=None,
                                                iface=None,
                                                user_factory=User.create_user,
                                                ext_values=user_info)
-            set_user_salesforce_id(user, external_type, external_id, request)
+            set_user_salesforce_id(user, external_id, request)
             force_email_verification(user)  # trusted source
             notify(SalesforceUserCreatedEvent(user, request))
             request.environ['nti.request_had_transaction_side_effects'] = 'True'

@@ -30,8 +30,11 @@ ZCML_STRING = """
     <include package="." file="meta.zcml" />
 
     <configure>
-        <your:registerSalesforceLogonSettings api_endpoint="http://salesforce.api"
-                                              api_key="1111111111111"
+        <your:registerSalesforceLogonSettings client_id="abcde"
+                                              client_secret="1111111111111"
+                                              login_url="https://login.salesforce.com/services/oauth2/authorize"
+                                              token_url="https://login.salesforce.com/services/oauth2/token"
+                                              user_info_url="https://login.salesforce.com/services/oauth2/userinfo"
                                               app_title="salesforce app" />
     </configure>
 </configure>
@@ -45,8 +48,14 @@ class TestZcml(nti.testing.base.ConfiguringTestBase):
         logon_settings = component.queryUtility(ISalesforceLogonSettings)
         assert_that(logon_settings, not_none())
         assert_that(logon_settings,
-                    has_property('api_endpoint', is_("http://salesforce.api")))
+                    has_property('client_id', is_("abcde")))
         assert_that(logon_settings,
-                    has_property('api_key', is_("1111111111111")))
+                    has_property('client_secret', is_("1111111111111")))
         assert_that(logon_settings,
                     has_property('app_title', is_("salesforce app")))
+        assert_that(logon_settings,
+                    has_property('login_url', is_("https://login.salesforce.com/services/oauth2/authorize")))
+        assert_that(logon_settings,
+                    has_property('token_url', is_("https://login.salesforce.com/services/oauth2/token")))
+        assert_that(logon_settings,
+                    has_property('user_info_url', is_("https://login.salesforce.com/services/oauth2/userinfo")))
