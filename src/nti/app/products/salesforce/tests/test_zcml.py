@@ -31,7 +31,7 @@ ZCML_STRING = """
 
     <configure>
         <salesforce:registerSalesforceLogonSettings client_id="abcde"
-                                                    client_secret="1111111111111"
+                                                    client_secret="fwJJRWVZAURWWUUQ"
                                                     login_url="https://login.salesforce.com/services/oauth2/authorize"
                                                     token_url="https://login.salesforce.com/services/oauth2/token"
                                                     user_info_url="https://login.salesforce.com/services/oauth2/userinfo"
@@ -50,7 +50,7 @@ class TestZcml(nti.testing.base.ConfiguringTestBase):
         assert_that(logon_settings,
                     has_property('client_id', is_("abcde")))
         assert_that(logon_settings,
-                    has_property('client_secret', is_("1111111111111")))
+                    has_property('client_secret', is_("fwJJRWVZAURWWUUQ")))
         assert_that(logon_settings,
                     has_property('app_title', is_("salesforce app")))
         assert_that(logon_settings,
