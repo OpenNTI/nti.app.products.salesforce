@@ -44,7 +44,10 @@ class ISalesforceLogonSettings(interface.Interface):
                         required=True)
 
     user_info_url = HTTPURL(title=u'The url to fetch user information',
-                        required=True)
+                            required=True)
+
+    logon_link_title = TextLine(title=u'The logon link title',
+                                required=False)
 
 
 class ISalesforceUserCreatedEvent(IObjectEvent):

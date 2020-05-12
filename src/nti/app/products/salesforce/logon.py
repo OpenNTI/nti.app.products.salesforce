@@ -261,14 +261,20 @@ def salesforce_oauth2(request):
 
 @component.adapter(IRequest)
 @interface.implementer(IUnauthenticatedUserLinkProvider)
-class _SimpleUnauthenticatedUserSalesforceLinkProvider(object):
+class SimpleUnauthenticatedUserSalesforceLinkProvider(object):
 
     rel = REL_LOGIN_SALESFORCE
 
-    title = _('Logon through Salesforce')
+    default_title = _('Logon through Salesforce')
 
     def __init__(self, request):
         self.request = request
+
+    @property
+    def title(self):
+        auth_settings = component.queryUtility(ISalesforceLogonSettings)
+        if auth_settings is not None:
+            return auth_settings.logon_link_title or self.default_title
 
     def get_links(self):
         auth_settings = component.queryUtility(ISalesforceLogonSettings)
@@ -284,13 +290,12 @@ class _SimpleUnauthenticatedUserSalesforceLinkProvider(object):
 
 @interface.implementer(ILogonLinkProvider)
 @component.adapter(IMissingUser, IRequest)
-class _SimpleMissingUserSalesforceLinkProvider(_SimpleUnauthenticatedUserSalesforceLinkProvider):
+class SimpleMissingUserSalesforceLinkProvider(SimpleUnauthenticatedUserSalesforceLinkProvider):
 
     def __init__(self, user, request):
-        super(_SimpleMissingUserSalesforceLinkProvider, self).__init__(request)
+        super(SimpleMissingUserSalesforceLinkProvider, self).__init__(request)
         self.user = user
 
     def __call__(self):
         links = self.get_links()
         return links[0] if links else None
-

@@ -12,19 +12,30 @@ from __future__ import absolute_import
 
 import functools
 
+from pyramid.interfaces import IRequest
+
 from zope import interface
 
 from zope.component.zcml import utility
+from zope.component.zcml import subscriber
 
 from zope.schema import TextLine
 
 from nti.app.products.salesforce.interfaces import ISalesforceLogonSettings
 
+from nti.app.products.salesforce.logon import SimpleMissingUserSalesforceLinkProvider
+from nti.app.products.salesforce.logon import SimpleUnauthenticatedUserSalesforceLinkProvider
+
 from nti.app.products.salesforce.model import SalesforceLogonSettings
+
+from nti.appserver.interfaces import ILogonLinkProvider
+from nti.appserver.interfaces import IUnauthenticatedUserLinkProvider
 
 from nti.common._compat import text_
 
 from nti.common.cypher import get_plaintext
+
+from nti.coremetadata.interfaces import IMissingUser
 
 from nti.schema.field import HTTPURL
 
@@ -50,16 +61,28 @@ class IRegisterSalesforceLogonSettings(interface.Interface):
     user_info_url = HTTPURL(title=u'The url to fetch user information',
                         required=True)
 
+    logon_link_title = TextLine(title=u'The logon link title',
+                                required=False)
 
-def registerSalesforceLogonSettings(_context, client_id, client_secret, app_title,
+
+def registerSalesforceLogonSettings(_context, client_id,
+                                    client_secret, app_title,
                                     login_url,
                                     user_info_url,
-                                    token_url):
+                                    token_url, logon_link_title):
     factory = functools.partial(SalesforceLogonSettings,
                                 client_id=text_(client_id),
                                 app_title=text_(app_title),
                                 client_secret=get_plaintext(client_secret),
                                 login_url=login_url,
                                 user_info_url=user_info_url,
-                                token_url=token_url)
+                                token_url=token_url,
+                                logon_link_title=logon_link_title)
     utility(_context, provides=ISalesforceLogonSettings, factory=factory)
+
+    subscriber(_context, provides=ILogonLinkProvider,
+               for_=(IMissingUser, IRequest),
+               factory=SimpleMissingUserSalesforceLinkProvider)
+    subscriber(_context, provides=IUnauthenticatedUserLinkProvider,
+               for_=(IRequest,),
+               factory=SimpleUnauthenticatedUserSalesforceLinkProvider)
