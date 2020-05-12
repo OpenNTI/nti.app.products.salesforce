@@ -47,7 +47,8 @@ ZCML_STRING = """
                                                     token_url="https://login.salesforce.com/services/oauth2/token"
                                                     user_info_url="https://login.salesforce.com/services/oauth2/userinfo"
                                                     app_title="salesforce app"
-                                                    logon_link_title="logon link title" />
+                                                    logon_link_title="logon link title"
+                                                    disable_account_creation="true" />
     </configure>
 </configure>
 """
