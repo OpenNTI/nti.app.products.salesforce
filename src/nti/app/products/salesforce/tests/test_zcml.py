@@ -50,7 +50,7 @@ class TestZcml(nti.testing.base.ConfiguringTestBase):
         assert_that(logon_settings,
                     has_property('client_id', is_("abcde")))
         assert_that(logon_settings,
-                    has_property('client_secret', is_("fwJJRWVZAURWWUUQ")))
+                    has_property('client_secret', is_("111111111111")))
         assert_that(logon_settings,
                     has_property('app_title', is_("salesforce app")))
         assert_that(logon_settings,
