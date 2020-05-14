@@ -33,6 +33,7 @@ from zope.event import notify
 
 from nti.app.products.salesforce import MessageFactory as _
 
+from nti.app.products.salesforce.interfaces import ISalesforceUser
 from nti.app.products.salesforce.interfaces import ISalesforceLogonSettings
 from nti.app.products.salesforce.interfaces import SalesforceUserLogonEvent
 from nti.app.products.salesforce.interfaces import SalesforceUserCreatedEvent
@@ -247,6 +248,7 @@ def salesforce_oauth2(request):
             notify(SalesforceUserCreatedEvent(user, request))
             request.environ['nti.request_had_transaction_side_effects'] = 'True'
 
+        interface.alsoProvides(user, ISalesforceUser)
         notify(SalesforceUserLogonEvent(user, user_info))
         response = _create_success_response(request,
                                             userid=user.username,
