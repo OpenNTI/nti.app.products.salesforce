@@ -34,6 +34,7 @@ from zope.event import notify
 from nti.app.products.salesforce import MessageFactory as _
 
 from nti.app.products.salesforce.interfaces import ISalesforceUser
+from nti.app.products.salesforce.interfaces import ISalesforceUserProfile
 from nti.app.products.salesforce.interfaces import ISalesforceLogonSettings
 from nti.app.products.salesforce.interfaces import SalesforceUserLogonEvent
 from nti.app.products.salesforce.interfaces import SalesforceUserCreatedEvent
@@ -53,6 +54,7 @@ from nti.appserver.policies.interfaces import INoAccountCreationEmail
 
 from nti.dataserver.interfaces import IDataserverFolder
 
+from nti.dataserver.users.interfaces import IUserProfile
 from nti.dataserver.users.interfaces import IUsernameGeneratorUtility
 
 from nti.dataserver.users.users import User
@@ -249,6 +251,8 @@ def salesforce_oauth2(request):
             request.environ['nti.request_had_transaction_side_effects'] = 'True'
 
         interface.alsoProvides(user, ISalesforceUser)
+        profile = IUserProfile(user)
+        interface.alsoProvides(profile, ISalesforceUserProfile)
         notify(SalesforceUserLogonEvent(user, user_info))
         response = _create_success_response(request,
                                             userid=user.username,

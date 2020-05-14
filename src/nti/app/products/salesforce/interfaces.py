@@ -27,6 +27,12 @@ class ISalesforceUser(interface.Interface):
     """
 
 
+class ISalesforceUserProfile(interface.Interface):
+    """
+    Marker interface for a user created via Salesforce.
+    """
+
+
 class ISalesforceLogonSettings(interface.Interface):
 
     client_id = TextLine(title=u'The OAuth2 client id',
