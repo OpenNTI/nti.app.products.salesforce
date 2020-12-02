@@ -31,6 +31,8 @@ from zope import component
 
 from zope.event import notify
 
+from nti.app.authentication import user_can_login
+
 from nti.app.products.salesforce import MessageFactory as _
 
 from nti.app.products.salesforce.interfaces import ISalesforceUser
@@ -250,6 +252,10 @@ def salesforce_oauth2(request):
             notify(SalesforceUserCreatedEvent(user, request))
             request.environ['nti.request_had_transaction_side_effects'] = 'True'
 
+        if not user_can_login(user):
+            return _create_failure_response(request,
+                            _return_url(request, 'failure'),
+                            error=_(u'User cannot login.'))
         interface.alsoProvides(user, ISalesforceUser)
         profile = IUserProfile(user)
         interface.alsoProvides(profile, ISalesforceUserProfile)
