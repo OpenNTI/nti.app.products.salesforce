@@ -52,6 +52,9 @@ class ISalesforceLogonSettings(interface.Interface):
     user_info_url = HTTPURL(title=u'The url to fetch user information',
                             required=True)
 
+    soql_query_url = HTTPURL(title=u'The url to fetch results for a SOQL query',
+                             required=True)
+
     logon_link_title = TextLine(title=u'The logon link title',
                                 required=False)
 
@@ -77,12 +80,16 @@ class ISalesforceUserLogonEvent(IObjectEvent):
     """
     request = Attribute(u"Request")
 
+    access_token = TextLine(title=u'The OAuth2 access token',
+                            required=True)
+
 
 @interface.implementer(ISalesforceUserLogonEvent)
 class SalesforceUserLogonEvent(ObjectEvent):
 
-    def __init__(self, obj, external_values=None, request=None):
+    def __init__(self, obj, access_token, external_values=None, request=None):
         super(SalesforceUserLogonEvent, self).__init__(obj)
         self.request = request
+        self.access_token = access_token
         self.external_values = external_values or {}
 

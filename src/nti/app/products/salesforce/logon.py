@@ -259,7 +259,7 @@ def salesforce_oauth2(request):
         interface.alsoProvides(user, ISalesforceUser)
         profile = IUserProfile(user)
         interface.alsoProvides(profile, ISalesforceUserProfile)
-        notify(SalesforceUserLogonEvent(user, user_info))
+        notify(SalesforceUserLogonEvent(user, access_token, user_info))
         response = _create_success_response(request,
                                             userid=user.username,
                                             success=_return_url(request),)
