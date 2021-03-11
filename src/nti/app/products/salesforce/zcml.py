@@ -70,6 +70,9 @@ class IRegisterSalesforceLogonSettings(interface.Interface):
     user_info_url = HTTPURL(title=u'The url to fetch user information',
                         required=True)
 
+    soql_query_url = HTTPURL(title=u'The url to fetch results for a SOQL query',
+                             required=True)
+
     logon_link_title = TextLine(title=u'The logon link title',
                                 required=False)
 
@@ -83,7 +86,8 @@ def registerSalesforceLogonSettings(_context, client_id,
                                     login_url,
                                     user_info_url,
                                     token_url, logon_link_title,
-                                    disable_account_creation):
+                                    disable_account_creation,
+                                    soql_query_url):
     """
     Register salesforce logon settings, including link providers. Disables
     account creation if necessary.
@@ -95,6 +99,7 @@ def registerSalesforceLogonSettings(_context, client_id,
                                 login_url=login_url,
                                 user_info_url=user_info_url,
                                 token_url=token_url,
+                                soql_query_url=soql_query_url,
                                 logon_link_title=logon_link_title)
     utility(_context, provides=ISalesforceLogonSettings, factory=factory)
 

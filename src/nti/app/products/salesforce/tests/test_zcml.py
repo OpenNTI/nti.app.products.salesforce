@@ -46,6 +46,7 @@ ZCML_STRING = """
                                                     login_url="https://login.salesforce.com/services/oauth2/authorize"
                                                     token_url="https://login.salesforce.com/services/oauth2/token"
                                                     user_info_url="https://login.salesforce.com/services/oauth2/userinfo"
+                                                    soql_query_url="https://login.salesforce.com/services/data/v51.0/query/"
                                                     app_title="salesforce app"
                                                     logon_link_title="logon link title"
                                                     disable_account_creation="true" />
